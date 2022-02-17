@@ -31,5 +31,6 @@ public class ProtocolOcean implements ModInitializer {
                     ServerPlayNetworking.send(context.getSource().getPlayer(), ProtocolOceanPackets.KEY_BIND, buf);
             return 1;
         }))))));
+        LOGGER.info("ProtocolOcean loaded");
     }
 }
