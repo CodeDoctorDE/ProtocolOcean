@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "protocolocean",
+  "version": "${version}",
+  "name": "ProtocolOcean",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "Apache-2.0",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "dev.linwood.protocolocean.client.ProtocolOceanClient"
+    ],
+    "main": [
+      "dev.linwood.protocolocean.ProtocolOcean"
+    ]
+  },
+  "mixins": [
+    "ProtocolOcean.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.13.2",
+    "fabric": "*",
+    "minecraft": "1.18.1"
+  }
+}
