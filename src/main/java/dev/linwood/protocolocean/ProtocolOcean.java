@@ -1,7 +1,6 @@
 package dev.linwood.protocolocean;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import dev.linwood.protocolocean.packet.ProtocolOceanPackets;
