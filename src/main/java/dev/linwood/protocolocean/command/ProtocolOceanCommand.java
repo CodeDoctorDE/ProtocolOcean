@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.linwood.protocolocean.packet.OceanFilter;
 import dev.linwood.protocolocean.packet.OceanKeyBinding;
+import dev.linwood.protocolocean.packet.OceanKeyUnbinding;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.network.PacketByteBuf;
@@ -23,16 +24,28 @@ public class ProtocolOceanCommand {
                                         CommandManager.argument("key", StringArgumentType.string()).then(
                                                 CommandManager.argument("code", IntegerArgumentType.integer()).then(
                                                         CommandManager.argument("category", StringArgumentType.string()).executes(ProtocolOceanCommand::registerGlobalKeyBinding).then(
-                                                                CommandManager.argument("player", EntityArgumentType.player()).executes(ProtocolOceanCommand::registerKeyBinding))
+                                                                CommandManager.argument("player", EntityArgumentType.players()).executes(ProtocolOceanCommand::registerKeyBinding))
                                                 )
                                         )
-                                )).then(CommandManager.literal("filter").then(CommandManager.argument("path", StringArgumentType.string()).then(
-                                        CommandManager.argument("player", EntityArgumentType.player()).executes(ProtocolOceanCommand::registerFilter)
-                                ))
-                        )).then(CommandManager.literal("clear").executes(ProtocolOceanCommand::clear).then(
-                                CommandManager.literal("keybindings").executes(ProtocolOceanCommand::clearKeyBindings))
-                        )
+                                )
+                        )).then(CommandManager.literal("filter").then(CommandManager.argument("path", StringArgumentType.string()).then(
+                                CommandManager.argument("player", EntityArgumentType.player()).executes(ProtocolOceanCommand::registerFilter)
+                        ))).then(CommandManager.literal("unregister").then(
+                                CommandManager.literal("keybinding").then(
+                                        CommandManager.argument("key", StringArgumentType.string()).then(CommandManager.argument("player", EntityArgumentType.players()).executes(ProtocolOceanCommand::unregisterKeyBinding))
+                                )
+                        ))
         );
+    }
+
+    private static int unregisterKeyBinding(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        context.getSource().sendFeedback(Text.of("Keybinding unregistered"), false);
+        var key = StringArgumentType.getString(context, "key");
+        var unbinding = new OceanKeyUnbinding(key);
+        var players = EntityArgumentType.getPlayers(context, "player");
+        players.forEach(unbinding::sendPacket);
+
+        return 1;
     }
 
     private static int registerFilter(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {

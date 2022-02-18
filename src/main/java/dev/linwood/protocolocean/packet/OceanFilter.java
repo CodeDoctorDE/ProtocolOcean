@@ -1,7 +1,7 @@
 package dev.linwood.protocolocean.packet;
 
 import dev.linwood.protocolocean.ProtocolOcean;
-import dev.linwood.protocolocean.mixin.OceanGameRendererInvoker;
+import dev.linwood.protocolocean.mixin.GameRendererAccessor;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
@@ -36,10 +36,14 @@ public final class OceanFilter extends OceanPacket {
     }
 
     @Override
-    public void apply() {
+    public void apply(OceanRegistry registry) {
         ProtocolOcean.LOGGER.debug("Received filter {}", path);
         var renderer = MinecraftClient.getInstance().gameRenderer;
-        MinecraftClient.getInstance().execute(() -> ((OceanGameRendererInvoker) renderer).invokeLoadShader(new Identifier(path)));
+        MinecraftClient.getInstance().execute(() -> {
+            if (path.isBlank()) renderer.disableShader();
+            else ((GameRendererAccessor) renderer).invokeLoadShader(new Identifier(path));
+        });
+        registry.setFilter(this);
     }
 
 }

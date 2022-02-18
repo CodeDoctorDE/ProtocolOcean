@@ -27,6 +27,6 @@ public abstract class OceanPacket {
         ServerPlayNetworking.send(player, getIdentifier(), createPacket());
     }
 
-    public abstract void apply();
+    public abstract void apply(OceanRegistry registry);
 }
 

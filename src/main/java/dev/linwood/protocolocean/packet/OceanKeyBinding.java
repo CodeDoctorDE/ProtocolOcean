@@ -51,10 +51,11 @@ public final class OceanKeyBinding extends OceanPacket {
     }
 
     @Override
-    public void apply() {
+    public void apply(OceanRegistry registry) {
         ProtocolOcean.LOGGER.debug("Received key binding {} {} {}", name, code, category);
         KeyBindingHelper.registerKeyBinding(new KeyBinding(name, code, category));
         MinecraftClient.getInstance().options.load();
+        registry.registerKeyBinding(this);
     }
 
     @Override

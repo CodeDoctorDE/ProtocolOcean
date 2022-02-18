@@ -5,6 +5,7 @@ import net.minecraft.util.Identifier;
 
 public enum OceanPacketType {
     KEY_BIND(new Identifier("protocolocean", "key_bind")),
+    KEY_UNBIND(new Identifier("protocolocean", "key_unbind")),
     FILTER(new Identifier("protocolocean", "filter"));
 
     private final Identifier identifier;
@@ -24,6 +25,7 @@ public enum OceanPacketType {
     public OceanPacket create(PacketByteBuf buf) {
         return switch (this) {
             case KEY_BIND -> new OceanKeyBinding(buf);
+            case KEY_UNBIND -> new OceanKeyUnbinding(buf);
             case FILTER -> new OceanFilter(buf);
         };
     }

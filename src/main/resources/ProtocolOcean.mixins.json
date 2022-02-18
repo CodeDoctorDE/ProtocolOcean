@@ -4,9 +4,11 @@
   "package": "dev.linwood.protocolocean.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "OceanGameRendererInvoker",
-    "OceanHUDMixin",
-    "OceanSoundOptionScreenMixin"
+    "GameOptionsAccessor",
+    "GameRendererAccessor",
+    "InGameHudMixin",
+    "KeyBindingRegistryImplAccessor",
+    "SoundOptionScreenMixin"
   ],
   "client": [
   ],
