@@ -39,7 +39,7 @@ public final class OceanFilter extends OceanPacket {
     public void apply() {
         ProtocolOcean.LOGGER.debug("Received filter {}", path);
         var renderer = MinecraftClient.getInstance().gameRenderer;
-        ((OceanGameRendererInvoker) renderer).invokeLoadShader(Identifier.tryParse(path));
+        MinecraftClient.getInstance().execute(() -> ((OceanGameRendererInvoker) renderer).invokeLoadShader(new Identifier(path)));
     }
 
 }

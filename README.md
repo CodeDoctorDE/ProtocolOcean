@@ -16,6 +16,7 @@ To use this modification you need to install this plugin on the server and the c
 * 🖼 Custom guis
 * 📦 Custom inventory
 * 🎥 Custom camera
+  * Custom filter (also known as "super secret settings")
 * ✂ Custom player model
 * ➕ Custom blocks and items
 
