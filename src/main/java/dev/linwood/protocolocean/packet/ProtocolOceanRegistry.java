@@ -28,4 +28,8 @@ public class ProtocolOceanRegistry {
     public void clear() {
         clearKeyBindings();
     }
+
+    public OceanKeyBinding getKeyBinding(String name) {
+        return keyBindings.stream().filter(keybinding -> keybinding.getName().equals(name)).findFirst().orElse(null);
+    }
 }
