@@ -1,10 +1,20 @@
 plugins {
-    id 'fabric-loom' version '0.11.30'
-    id 'maven-publish'
+    id("fabric-loom") version "0.11-SNAPSHOT"
+    id("io.github.juuxel.loom-quiltflower") version "1.6.0"
+    id("org.quiltmc.quilt-mappings-on-loom") version "4.0.0"
+    id("maven-publish")
 }
 
-version = project.mod_version
-group = project.maven_group
+val mod_version: String by project.ext
+val maven_group: String by project.ext
+val minecraft_version: String by project.ext
+val quilt_mappings: String by project.ext
+val loader_version: String by project.ext
+val fabric_version: String by project.ext
+val archives_base_name: String by project.ext
+
+version = mod_version
+group = maven_group
 
 repositories {
     // Add repositories to retrieve artifacts from in here.
@@ -16,58 +26,62 @@ repositories {
 
 dependencies {
     // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    minecraft("com.mojang:minecraft:${minecraft_version}")
+    mappings(loom.layered {
+        addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${quilt_mappings}:v2"))
+    })
+    modImplementation("net.fabricmc:fabric-loader:${loader_version}")
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
 }
 
-processResources {
-    inputs.property "version", project.version
-    filteringCharset "UTF-8"
+tasks.processResources {
+    inputs.property("version", version)
+    filteringCharset = "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand("version" to version)
     }
 }
 
-def targetJavaVersion = 17
-tasks.withType(JavaCompile).configureEach {
+val targetJavaVersion = 17
+tasks.withType<JavaCompile>().configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
     // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
     // If Javadoc is generated, this must be specified in that task too.
-    it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release = targetJavaVersion
-    }
+    options.encoding = "UTF-8"
+    options.release.set(targetJavaVersion)
+}
+
+base {
+    archivesName.set(archives_base_name)
 }
 
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    val javaVersion = JavaVersion.toVersion(targetJavaVersion)
     if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+        toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
     }
-    archivesBaseName = project.archives_base_name
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.
     withSourcesJar()
+    withJavadocJar()
 }
 
-jar {
+tasks.jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_${archives_base_name}" }
     }
 }
 
 // configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            from components.java
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
         }
     }
 
