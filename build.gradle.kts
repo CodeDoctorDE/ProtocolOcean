@@ -5,6 +5,14 @@ plugins {
     id("maven-publish")
 }
 
+val mod_version: String by project.ext
+val maven_group: String by project.ext
+val minecraft_version: String by project.ext
+val quilt_mappings: String by project.ext
+val loader_version: String by project.ext
+val fabric_version: String by project.ext
+val archives_base_name: String by project.ext
+
 version = mod_version
 group = maven_group
 
@@ -28,31 +36,34 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
 }
 
-processResources {
+tasks.processResources {
     inputs.property("version", version)
     filteringCharset = "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand "version": version
+        expand("version" to version)
     }
 }
 
-def targetJavaVersion = 17
-tasks.withType(JavaCompile).configureEach {
+val targetJavaVersion = 17
+tasks.withType<JavaCompile>().configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
     // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
     // If Javadoc is generated, this must be specified in that task too.
     options.encoding = "UTF-8"
-    options.release = targetJavaVersion
+    options.release.set(targetJavaVersion)
+}
+
+base {
+    archivesName.set(archives_base_name)
 }
 
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    val javaVersion = JavaVersion.toVersion(targetJavaVersion)
     if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+        toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
     }
-    archivesBaseName = archives_base_name
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.
@@ -60,16 +71,16 @@ java {
     withJavadocJar()
 }
 
-jar {
+tasks.jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_${archives_base_name}" }
     }
 }
 
 // configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        create<MavenPublication>("mavenJava") {
             from(components["java"])
         }
     }
