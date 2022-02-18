@@ -1,0 +1,4 @@
+*.java eol=lf
+*.kts eol=lf
+*.bat eol=crlf
+gradlew eol=lf

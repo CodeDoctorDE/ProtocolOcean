@@ -14,5 +14,4 @@ public interface GameOptionsAccessor {
     @Accessor("allKeys")
     @Mutable
     void setAllKeys(KeyBinding[] keys);
-
 }
