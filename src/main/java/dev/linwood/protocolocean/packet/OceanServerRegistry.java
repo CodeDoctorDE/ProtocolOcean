@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ProtocolOceanServerRegistry {
-    private static final Map<UUID, ProtocolOceanRegistry> playerRegistries = new HashMap<>();
-    private static final ProtocolOceanRegistry globalRegistry = new ProtocolOceanRegistry();
+public class OceanServerRegistry {
+    private static final Map<UUID, OceanRegistry> playerRegistries = new HashMap<>();
+    private static final OceanRegistry globalRegistry = new OceanRegistry();
 
-    public static ProtocolOceanRegistry getGlobalRegistry() {
+    public static OceanRegistry getGlobalRegistry() {
         return globalRegistry;
     }
 
@@ -20,11 +20,11 @@ public class ProtocolOceanServerRegistry {
         return keyBinding;
     }
 
-    public static ProtocolOceanRegistry getRegistry(UUID playerId) {
+    public static OceanRegistry getRegistry(UUID playerId) {
         return playerRegistries.get(playerId);
     }
 
-    public static void register(UUID playerId, ProtocolOceanRegistry registry) {
+    public static void register(UUID playerId, OceanRegistry registry) {
         playerRegistries.put(playerId, registry);
     }
 

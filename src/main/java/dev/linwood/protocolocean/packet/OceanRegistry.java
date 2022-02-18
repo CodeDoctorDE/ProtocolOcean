@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ProtocolOceanRegistry {
+public class OceanRegistry {
     private final Set<OceanKeyBinding> keyBindings = new HashSet<>();
 
     public Set<OceanKeyBinding> getKeyBindings() {
@@ -20,7 +20,7 @@ public class ProtocolOceanRegistry {
     }
 
     public boolean containsKeyBinding(String key) {
-        return keyBindings.contains(new OceanKeyBinding(key, null, 0));
+        return keyBindings.contains(new OceanKeyBinding(key, 0, null));
     }
 
     public void clearKeyBindings() {

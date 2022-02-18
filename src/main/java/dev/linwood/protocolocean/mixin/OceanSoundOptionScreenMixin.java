@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(SoundOptionsScreen.class)
-public abstract class ProtocolOceanSoundOptionScreenMixin extends GameOptionsScreen {
+public abstract class OceanSoundOptionScreenMixin extends GameOptionsScreen {
 
-    private ProtocolOceanSoundOptionScreenMixin(Screen parent, GameOptions gameOptions, Text title) {
+    private OceanSoundOptionScreenMixin(Screen parent, GameOptions gameOptions, Text title) {
         super(parent, gameOptions, title);
     }
 

@@ -2,7 +2,7 @@ package dev.linwood.protocolocean;
 
 import com.google.gson.Gson;
 import dev.linwood.protocolocean.command.ProtocolOceanCommand;
-import dev.linwood.protocolocean.packet.ProtocolOceanServerRegistry;
+import dev.linwood.protocolocean.packet.OceanServerRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -21,7 +21,7 @@ public class ProtocolOcean implements ModInitializer {
     }
 
     private static void onDisconnect(ServerPlayNetworkHandler handler, MinecraftServer server) {
-        ProtocolOceanServerRegistry.unregister(handler.getPlayer().getUuid());
+        OceanServerRegistry.unregister(handler.getPlayer().getUuid());
     }
 
     @Override

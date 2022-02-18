@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import dev.linwood.protocolocean.packet.OceanKeyBinding;
+import dev.linwood.protocolocean.packet.OceanPacketType;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -20,10 +20,10 @@ public class ProtocolOceanCommand {
                 CommandManager.literal("protocolocean").then(CommandManager.literal("reload").executes(ProtocolOceanCommand::reload))
                         .then(CommandManager.literal("register").then(
                                 CommandManager.literal("keybinding").then(
-                                        CommandManager.argument("player", EntityArgumentType.player()).then(
-                                                CommandManager.argument("key", StringArgumentType.string()).then(
-                                                        CommandManager.argument("code", IntegerArgumentType.integer()).then(
-                                                                CommandManager.argument("category", StringArgumentType.string()).executes(ProtocolOceanCommand::registerKeyBinding))
+                                        CommandManager.argument("key", StringArgumentType.string()).then(
+                                                CommandManager.argument("code", IntegerArgumentType.integer()).then(
+                                                        CommandManager.argument("category", StringArgumentType.string()).executes(ProtocolOceanCommand::registerGlobalKeyBinding).then(
+                                                                CommandManager.argument("player", EntityArgumentType.player()).executes(ProtocolOceanCommand::registerKeyBinding))
                                                 )
                                         )
                                 )
@@ -31,6 +31,12 @@ public class ProtocolOceanCommand {
                                 CommandManager.literal("keybindings").executes(ProtocolOceanCommand::clearKeyBindings))
                         )
         );
+    }
+
+    private static int registerGlobalKeyBinding(CommandContext<ServerCommandSource> context) {
+        context.getSource().sendFeedback(Text.of("Global keybinding registered"), false);
+        PacketByteBuf buf = PacketByteBufs.create();
+        return 1;
     }
 
     private static int clearKeyBindings(CommandContext<ServerCommandSource> context) {
@@ -52,7 +58,7 @@ public class ProtocolOceanCommand {
         buf.writeString(context.getArgument("key", String.class));
         buf.writeInt(context.getArgument("code", Integer.class));
         buf.writeString(context.getArgument("category", String.class));
-        players.forEach(player -> ServerPlayNetworking.send(player, OceanKeyBinding.IDENTIFIER, buf));
+        players.forEach(player -> ServerPlayNetworking.send(player, OceanPacketType.KEY_BIND.getIdentifier(), buf));
         return 1;
     }
 }
