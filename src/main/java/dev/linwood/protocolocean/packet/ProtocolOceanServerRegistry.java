@@ -13,7 +13,7 @@ public class ProtocolOceanServerRegistry {
     }
 
     public static OceanKeyBinding getKeyBinding(UUID playerId, String key) {
-        var keyBinding=  getRegistry(playerId).getKeyBinding(key);
+        var keyBinding = getRegistry(playerId).getKeyBinding(key);
         if (keyBinding == null) {
             keyBinding = globalRegistry.getKeyBinding(key);
         }

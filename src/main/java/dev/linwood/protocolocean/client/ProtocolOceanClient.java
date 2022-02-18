@@ -3,7 +3,6 @@ package dev.linwood.protocolocean.client;
 import com.google.gson.Gson;
 import dev.linwood.protocolocean.ProtocolOcean;
 import dev.linwood.protocolocean.packet.OceanKeyBinding;
-import dev.linwood.protocolocean.packet.ProtocolOceanRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,6 +13,7 @@ import net.minecraft.client.option.KeyBinding;
 @Environment(EnvType.CLIENT)
 public class ProtocolOceanClient implements ClientModInitializer {
     private static final Gson GSON = new Gson();
+
     @Override
     public void onInitializeClient() {
         ClientPlayNetworking.registerGlobalReceiver(OceanKeyBinding.IDENTIFIER, (client, handler, buf, responseSender) -> {

@@ -12,14 +12,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public abstract class ProtocolOceanHUDMixin {
 
-    @Shadow private int scaledWidth;
+    @Shadow
+    private int scaledWidth;
 
-    @Shadow private int scaledHeight;
+    @Shadow
+    private int scaledHeight;
 
-    @Shadow public abstract TextRenderer getTextRenderer();
+    @Shadow
+    public abstract TextRenderer getTextRenderer();
 
     @Inject(method = "render", at = @At("RETURN"))
-    public void onRender (MatrixStack matrices, float tickDelta, CallbackInfo info) {
+    public void onRender(MatrixStack matrices, float tickDelta, CallbackInfo info) {
         getTextRenderer().draw(matrices, "Powered by ProtocolOcean", scaledWidth - 150, scaledHeight - 10, -1);
 
     }
