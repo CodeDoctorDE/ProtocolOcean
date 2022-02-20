@@ -5,9 +5,9 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import dev.linwood.protocolocean.packet.OceanFilter;
-import dev.linwood.protocolocean.packet.OceanKeyBinding;
-import dev.linwood.protocolocean.packet.OceanKeyUnbinding;
+import dev.linwood.protocolocean.ProtocolOcean;
+import dev.linwood.protocolocean.feature.OceanFilterFeature;
+import dev.linwood.protocolocean.feature.OceanKeyBindFeature;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.network.PacketByteBuf;
@@ -41,9 +41,13 @@ public class ProtocolOceanCommand {
     private static int unregisterKeyBinding(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         context.getSource().sendFeedback(Text.of("Keybinding unregistered"), false);
         var key = StringArgumentType.getString(context, "key");
-        var unbinding = new OceanKeyUnbinding(key);
         var players = EntityArgumentType.getPlayers(context, "player");
-        players.forEach(unbinding::sendPacket);
+        players.forEach(player -> {
+            var feature = ProtocolOcean.REGISTRY.getRegistry(player.getUuid()).getFeature(OceanKeyBindFeature.class);
+            feature.remove(key);
+            feature.applyChanges(false);
+
+        });
 
         return 1;
     }
@@ -52,8 +56,12 @@ public class ProtocolOceanCommand {
         context.getSource().sendFeedback(Text.of("Filter registered"), false);
         var players = EntityArgumentType.getPlayers(context, "player");
         var path = StringArgumentType.getString(context, "path");
-        var filter = new OceanFilter(path);
-        players.forEach(filter::sendPacket);
+        players.forEach(player -> {
+            var feature = ProtocolOcean.REGISTRY.getRegistry(player.getUuid()).getFeature(OceanFilterFeature.class);
+            feature.setFilter(path);
+            feature.applyChanges(false);
+
+        });
         return 1;
     }
 
@@ -81,8 +89,11 @@ public class ProtocolOceanCommand {
         var key = StringArgumentType.getString(context, "key");
         var code = IntegerArgumentType.getInteger(context, "code");
         var category = StringArgumentType.getString(context, "category");
-        var keyBinding = new OceanKeyBinding(key, code, category);
-        players.forEach(keyBinding::sendPacket);
+        players.forEach(player -> {
+            var feature = ProtocolOcean.REGISTRY.getRegistry(player.getUuid()).getFeature(OceanKeyBindFeature.class);
+            feature.add(key, code, category);
+            feature.applyChanges(false);
+        });
         return 1;
     }
 }

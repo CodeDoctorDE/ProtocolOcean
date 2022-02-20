@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public class ProtocolOcean implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("protocolocean");
+    public static final OceanServerFeatureRegistry REGISTRY = new OceanServerFeatureRegistry();
     private static final Gson GSON = new Gson();
 
     private static void onJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
@@ -21,7 +22,7 @@ public class ProtocolOcean implements ModInitializer {
     }
 
     private static void onDisconnect(ServerPlayNetworkHandler handler, MinecraftServer server) {
-        OceanServerFeatureRegistry.unregister(handler.getPlayer().getUuid());
+        REGISTRY.unregister(handler.getPlayer().getUuid());
     }
 
     @Override

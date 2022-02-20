@@ -6,6 +6,7 @@
   "mixins": [
     "GameOptionsAccessor",
     "GameRendererAccessor",
+    "GameRendererMixin",
     "InGameHudMixin",
     "KeyBindingRegistryImplAccessor",
     "SoundOptionScreenMixin"

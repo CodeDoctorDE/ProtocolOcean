@@ -1,24 +1,23 @@
 package dev.linwood.protocolocean.feature;
 
-import java.util.Collections;
 import java.util.Set;
 
 public class OceanFeatureRegistry {
-    private final Set<OceanFeature> features = Set.of(new OceanKeyBindFeature());
+    private final Set<OceanFeature> features = Set.of(new OceanKeyBindFeature(), new OceanFilterFeature());
 
     public Set<OceanFeature> getFeatures() {
-        return Collections.unmodifiableSet(features);
+        return features;
     }
 
-    public <T extends OceanFeature> T getFeature(Class<T> clazz) {
+    public <T> T getFeature(Class<T> clazz) {
         return features.stream().filter(clazz::isInstance).map(clazz::cast).findFirst().orElse(null);
     }
 
-    public void unload() {
-        features.forEach(OceanFeature::unload);
+    public void unload(boolean isClient) {
+        features.forEach(oceanFeature -> oceanFeature.unload(isClient));
     }
 
-    public void load() {
-        features.forEach(OceanFeature::load);
+    public void load(boolean isClient) {
+        features.forEach(oceanFeature -> oceanFeature.load(isClient));
     }
 }

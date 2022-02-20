@@ -9,5 +9,4 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface GameRendererAccessor {
     @Invoker("loadShader")
     void invokeLoadShader(Identifier id);
-
 }
