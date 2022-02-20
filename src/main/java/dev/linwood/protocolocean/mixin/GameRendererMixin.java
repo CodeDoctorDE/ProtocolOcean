@@ -18,9 +18,7 @@ public abstract class GameRendererMixin {
 
     @Inject(method = "onCameraEntitySet", at = @At("RETURN"))
     public void onCameraEntitySet(Entity entity, CallbackInfo ci) {
-        if (entity == null) {
-            var feature = ProtocolOceanClient.REGISTRY.getFeature(OceanFilterFeature.class);
-            this.loadShader(new Identifier(feature.getFilter()));
-        }
+        var feature = ProtocolOceanClient.REGISTRY.getFeature(OceanFilterFeature.class);
+        this.loadShader(new Identifier(feature.getFilter()));
     }
 }

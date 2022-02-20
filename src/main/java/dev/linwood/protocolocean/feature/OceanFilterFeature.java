@@ -11,7 +11,7 @@ public class OceanFilterFeature extends OceanFeature {
 
     @Override
     public void handle(OceanPacket packet, boolean isClient) {
-        this.filter = packet.getPacket().readString();
+        this.filter = packet.copyPacket().readString();
         if (isClient) {
             var renderer = MinecraftClient.getInstance().gameRenderer;
             MinecraftClient.getInstance().execute(() -> {

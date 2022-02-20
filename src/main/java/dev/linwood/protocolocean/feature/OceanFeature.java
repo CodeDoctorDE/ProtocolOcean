@@ -33,7 +33,7 @@ public abstract class OceanFeature {
 
     public abstract Identifier[] getIds();
 
-    void sendPacket(ServerPlayerEntity... players) {
+    public void sendPacket(ServerPlayerEntity... players) {
         for (OceanPacket change : getChanges()) {
             for (ServerPlayerEntity player : players) {
                 change.sendPacket(player);

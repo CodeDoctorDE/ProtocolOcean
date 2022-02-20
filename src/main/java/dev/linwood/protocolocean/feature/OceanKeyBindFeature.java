@@ -33,8 +33,8 @@ public class OceanKeyBindFeature extends OceanFeature {
 
     @Override
     public void handle(OceanPacket packet, boolean isClient) {
-        if (ADD_ID.equals(packet.getId())) {
-            var buf = packet.getPacket();
+        if (ADD_ID.equals(packet.id())) {
+            var buf = packet.copyPacket();
             var keyBind = new OceanKeyBind(buf.readString(), buf.readInt(), buf.readString());
             keyBinds.add(keyBind);
             if (isClient) {
@@ -42,8 +42,8 @@ public class OceanKeyBindFeature extends OceanFeature {
                 KeyBindingHelper.registerKeyBinding(new KeyBinding(keyBind.key, keyBind.keyCode, keyBind.category));
                 MinecraftClient.getInstance().options.load();
             }
-        } else if (REMOVE_ID.equals(packet.getId())) {
-            var buf = packet.getPacket();
+        } else if (REMOVE_ID.equals(packet.id())) {
+            var buf = packet.copyPacket();
             var key = buf.readString();
             for (var keyBind : keyBinds) {
                 if (key.equals(keyBind.key)) {
@@ -57,7 +57,7 @@ public class OceanKeyBindFeature extends OceanFeature {
                     break;
                 }
             }
-        } else if (CLEAR_ID.equals(packet.getId())) {
+        } else if (CLEAR_ID.equals(packet.id())) {
             keyBinds.clear();
         }
     }

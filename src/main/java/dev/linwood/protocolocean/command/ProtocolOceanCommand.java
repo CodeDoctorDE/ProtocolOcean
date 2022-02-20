@@ -45,8 +45,7 @@ public class ProtocolOceanCommand {
         players.forEach(player -> {
             var feature = ProtocolOcean.REGISTRY.getRegistry(player.getUuid()).getFeature(OceanKeyBindFeature.class);
             feature.remove(key);
-            feature.applyChanges(false);
-
+            feature.sendPacket(player);
         });
 
         return 1;
@@ -59,8 +58,7 @@ public class ProtocolOceanCommand {
         players.forEach(player -> {
             var feature = ProtocolOcean.REGISTRY.getRegistry(player.getUuid()).getFeature(OceanFilterFeature.class);
             feature.setFilter(path);
-            feature.applyChanges(false);
-
+            feature.sendPacket(player);
         });
         return 1;
     }
@@ -92,7 +90,7 @@ public class ProtocolOceanCommand {
         players.forEach(player -> {
             var feature = ProtocolOcean.REGISTRY.getRegistry(player.getUuid()).getFeature(OceanKeyBindFeature.class);
             feature.add(key, code, category);
-            feature.applyChanges(false);
+            feature.sendPacket(player);
         });
         return 1;
     }
